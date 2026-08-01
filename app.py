@@ -112,7 +112,7 @@ if not df.empty:
                 
                 st.info(
                     f"🍺 **{namn}** *{tillägg_text}*\n\n"
-                    f"**Stil:** {stil} | f"**Bryggeri:** {bryggeri_text}  \n"
+                    f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}\n\n"
                     f"🔗 [Visa på Systembolaget.se]({direct_url})"
                 )
