@@ -32,6 +32,8 @@ if not df.empty:
         # Omvandla de fält som faktiskt finns till textsträngar
         df['productNameBold'] = df['productNameBold'].astype(str)
         df['isRegionalRestricted'] = df['isRegionalRestricted'].astype(str)
+        df['assortmentText'] = df['assortmentText'].astype(str)
+        
         # Eftersom 'category' är None, använder vi 'categoryLevel1' som innehåller ordet "Öl"
         if 'categoryLevel1' in df.columns:
             df['categoryLevel1'] = df['categoryLevel1'].astype(str)
@@ -42,7 +44,8 @@ if not df.empty:
         # Filtrera: Måste vara Öl (via categoryLevel1) och ha isRegionalRestricted='true'
         unika_ol = df[
             (cat_filter) & 
-            (df['isRegionalRestricted'].str.lower() == 'true')
+            (df['isRegionalRestricted'].str.lower() == 'true') &
+            (df['assortmentText'].str.contains("Lokalt & småskaligt", na=False, case=False))
         ]        
         
         # Sortera i bokstavsordning på ölets namn
