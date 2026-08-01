@@ -78,7 +78,7 @@ if not df.empty:
         st.write("**Justera smakprofil (0-12):**")
         min_beska = st.slider("Minsta beska (bitterness:)", 0, 12, 0)
         min_fyllighet = st.slider("Minsta fyllighet (body):", 0, 12, 0)
-        max_sotma = st.slider("Maximal sötma (sweetness):", 0, 12, 12)
+        max_sotma = st.slider("Maximal sötma (sweetness):", 0, 12, 2)
         
         # Sökfält för fritext (bryggeri eller stad)
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
