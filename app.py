@@ -63,8 +63,25 @@ if not df.empty:
             unika_ol = unika_ol.sort_values(by="productNameBold")
 
         # 3. SÖKFÄLT FÖR ANVÄNDAREN
-        st.subheader("Filtrera på bryggeri, stad eller namn")
+        st.subheader("Filtrera och sök")
+        
+        # Dynamiskt hämta de ölstilar som faktiskt finns i vårt matchade resultat
+        tillgangliga_stilar = sorted(unika_ol['categoryLevel2'].unique())
+         
+        # Skapa en flervalsmeny (multiselect) – förvald med alla stilar
+        valda_stilar = st.multiselect(
+            "Välj ölstilar att visa:",
+            options=tillgangliga_stilar,
+            default=tillgangliga_stilar
+        )
+        
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
+
+        # Applicera användarens valda filter
+        if valda_stilar:
+            unika_ol = unika_ol[unika_ol['categoryLevel2'].isin(valda_stilar)]
+        else:
+            unika_ol = pd.DataFrame() # Tomt om användaren klickar bort alla stilar
 
         if sokning:
             unika_ol = unika_ol[
@@ -88,13 +105,14 @@ if not df.empty:
                 pris = row.get('price', 'N/A')
                 alkohol = row.get('alcoholPercentage', 'N/A')
                 volym = row.get('volumeText', '')
+                stil = row.get('categoryLevel2', 'Öl')
                 # Hämta artikelnumret från din JSON (t.ex. '3416414')
                 artikel_nummer = row.get('productNumber', '')
                 direct_url = f"https://www.systembolaget.se/produkt/ol/{artikel_nummer}/"
                 
                 st.info(
                     f"🍺 **{namn}** *{tillägg_text}*\n\n"
-                    f"**Bryggeri:** {bryggeri_text}  \n"
+                    f"**Stil:** {stil} | f"**Bryggeri:** {bryggeri_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}\n\n"
                     f"🔗 [Visa på Systembolaget.se]({direct_url})"
                 )
