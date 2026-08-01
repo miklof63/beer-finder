@@ -67,12 +67,14 @@ if not df.empty:
         
         # Dynamiskt hämta de ölstilar som faktiskt finns i vårt matchade resultat
         tillgangliga_stilar = sorted(unika_ol['categoryLevel2'].unique())
-         
+
+        default_val = ["Ale"] if "Ale" in tillgangliga_stilar else None
+        
         # Skapa en flervalsmeny (multiselect) – förvald med alla stilar
         valda_stilar = st.multiselect(
             "Filtrera på specifika ölstilar (lämna tom för att visa alla):",
             options=tillgangliga_stilar,
-            default=None
+            default=default_val
         )
         
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
