@@ -12,10 +12,13 @@ st.write("Denna app visar regional öl som finns på hyllan nu, men som inte gå
 def load_systembolaget_data():
     stores_url = "https://githubusercontent.com"
     products_url = "https://githubusercontent.com"
-    
+    # Lägg till headers för att kringgå webbläsarens CORS-blockering
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
     try:
-        stores_res = requests.get(stores_url, timeout=10).json()
-        products_res = requests.get(products_url, timeout=10).json()
+        stores_res = requests.get(stores_url, headers=headers, timeout=10).json()
+        products_res = requests.get(products_url, headers=headers, timeout=10).json()
         return pd.DataFrame(stores_res), pd.DataFrame(products_res)
     except Exception as e:
         # Säkerhets-fallback om anropet blockeras
