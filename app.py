@@ -36,8 +36,7 @@ if not df.empty:
         
         # Superren och exakt filtrering: Måste vara Öl, och antingen regionalt låst ELLER tillhöra TSLS
         unika_ol = df[
-            (df['category'].str.contains("Öl", na=False, case=False)) & 
-            ((df['isRegionalRestricted'] == True) | (df['isTsLsAssortment'] == True))
+            (df['category'].str.contains("Öl", na=False, case=False))
         ]
         
         # Sortera i bokstavsordning på ölets namn
