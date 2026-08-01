@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import requests
+from datetime import datetime
 
 st.set_page_config(page_title="Lokal Öl-Hittare", page_icon="🍺", layout="centered")
 
