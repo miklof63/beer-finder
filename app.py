@@ -32,17 +32,16 @@ if not df.empty:
         # Sortera ut enligt dina exakta fältnamn: 
         # Endast Öl, Regionalt spärrade (isRegionalRestricted), Ej orderbara till hela landet
         
-        # Flexibel filtrering: kolla om fältet innehåller True, "True", 1 eller om det är TSLS-sortimentet
+        # Säkerställ att fälten tolkas korrekt som sanna/falska booleska värden
+        df['isRegionalRestricted'] = df['isRegionalRestricted'].fillna(False).astype(bool)
+        df['isTsLsAssortment'] = df['isTsLsAssortment'].fillna(False).astype(bool)
+        df['category'] = df['category'].astype(str)
+        
+        # Superren och exakt filtrering: Måste vara Öl, och antingen regionalt låst ELLER tillhöra TSLS
         unika_ol = df[
             (df['category'].str.contains("Öl", na=False, case=False)) & 
-            (
-                (df['isRegionalRestricted'] == True) | 
-                (df['isRegionalRestricted'].astype(str).str.lower() == 'true') |
-                (df['isRegionalRestricted'] == 1) |
-                (df['isTsLsAssortment'] == True) |
-                (df['isTsLsAssortment'].astype(str).str.lower() == 'true')
-            )
-        ]
+            ((df['isRegionalRestricted'] == True) | (df['isTsLsAssortment'] == True))
+        ]        
         
         # Sortera så nyaste eller dyraste/billigaste ligger logiskt, eller bara i bokstavsordning
         unika_ol = unika_ol.sort_values(by="productNameBold")
