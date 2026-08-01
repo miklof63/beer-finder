@@ -74,13 +74,30 @@ if not df.empty:
             options=tillgangliga_stilar,
             default=default_val
         )
+        # Skjutreglage för smakklockor (0-12, där 0 betyder "Filtrera inte")
+        st.write("**Justera smakprofil (0-12):**")
+        min_beska = st.slider("Minsta beska  bitterness:", 0, 12, 0)
+        min_fyllighet = st.slider("Minsta fyllighet (body):", 0, 12, 0)
+        min_sotma = st.slider("Minsta sötma (sweetness):", 0, 12, 0)
         
+        # Sökfält för fritext (bryggeri eller stad)
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
 
         # Applicera användarens valda filter
         if valda_stilar:
             unika_ol = unika_ol[unika_ol['categoryLevel2'].isin(valda_stilar)]
             
+        # Applicera smakklockornas filter på datan (omvandla till siffror först)
+        unika_ol['tasteClockBitter'] = pd.to_numeric(unika_ol['tasteClockBitter'], errors='coerce').fillna(0)
+        unika_ol['tasteClockBody'] = pd.to_numeric(unika_ol['tasteClockBody'], errors='coerce').fillna(0)
+        unika_ol['tasteClockSweetness'] = pd.to_numeric(unika_ol['tasteClockSweetness'], errors='coerce').fillna(0)
+
+        unika_ol = unika_ol[
+            (unika_ol['tasteClockBitter'] >= min_beska) &
+            (unika_ol['tasteClockBody'] >= min_fyllighet) &
+            (unika_ol['tasteClockSweetness'] >= min_sotma)
+        ]
+
         if sokning:
             unika_ol = unika_ol[
                 (unika_ol['productNameBold'].astype(str).str.contains(sokning, na=False, case=False)) |
