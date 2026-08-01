@@ -76,9 +76,9 @@ if not df.empty:
         )
         # Skjutreglage för smakklockor (0-12, där 0 betyder "Filtrera inte")
         st.write("**Justera smakprofil (0-12):**")
-        min_beska = st.slider("Minsta beska  bitterness:", 0, 12, 0)
+        min_beska = st.slider("Minsta beska (bitterness:)", 0, 12, 0)
         min_fyllighet = st.slider("Minsta fyllighet (body):", 0, 12, 0)
-        min_sotma = st.slider("Minsta sötma (sweetness):", 0, 12, 0)
+        max_sotma = st.slider("Maximal sötma (sweetness):", 0, 12, 12)
         
         # Sökfält för fritext (bryggeri eller stad)
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
@@ -95,7 +95,7 @@ if not df.empty:
         unika_ol = unika_ol[
             (unika_ol['tasteClockBitter'] >= min_beska) &
             (unika_ol['tasteClockBody'] >= min_fyllighet) &
-            (unika_ol['tasteClockSweetness'] >= min_sotma)
+            (unika_ol['tasteClockSweetness'] <= max_sotma)
         ]
 
         if sokning:
