@@ -88,12 +88,15 @@ if not df.empty:
                 pris = row.get('price', 'N/A')
                 alkohol = row.get('alcoholPercentage', 'N/A')
                 volym = row.get('volumeText', '')
+                # Hämta artikelnumret från din JSON (t.ex. '3416414')
+                artikel_nummer = row.get('productNumber', '')
+                direct_url = f"https://www.systembolaget.se/produkt/ol/{artikel_nummer}/"
                 
                 st.info(
                     f"🍺 **{namn}** *{tillägg_text}*\n\n"
                     f"**Bryggeri:** {bryggeri_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}\n\n"
-                    f"*🔒 Säljs lokalt på hyllan!*"
+                    f"🔗 [Visa på Systembolaget.se]({direct_url})"
                 )
         else:
             st.write("Inga unika, spärrade öl matchade din sökning just nu.")
