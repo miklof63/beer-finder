@@ -30,11 +30,10 @@ with st.spinner("Hämtar och sorterar Systembolagets databas (ca 73 MB)..."):
 if not df.empty:
     try:
         # Sortera ut enligt dina exakta fältnamn: 
-        # Endast Öl, Regionalt spärrade (isRegionalRestricted), Ej orderbara till hela landet (is_orderable == False)
+        # Endast Öl, Regionalt spärrade (isRegionalRestricted), Ej orderbara till hela landet
         unika_ol = df[
             (df['category'].str.contains("Öl", na=False, case=False)) & 
-            (df['isRegionalRestricted'] == True) & 
-            (df['is_orderable'] == False)
+            (df['isRegionalRestricted'] == True)
         ]
         
         # Sortera så nyaste eller dyraste/billigaste ligger logiskt, eller bara i bokstavsordning
