@@ -35,7 +35,6 @@ if not df.empty:
         df['isRegionalRestricted'] = df['isRegionalRestricted'].astype(str)
         df['assortmentText'] = df['assortmentText'].astype(str)
         df['isCompletelyOutOfStock'] = df['isCompletelyOutOfStock'].astype(str)
-        df['isTemporaryOutOfStock'] = df['isTemporaryOutOfStock'].astype(str)
         
         # Datumfiltrering: Omvandla lanseringsdatum till datumobjekt
         df['productLaunchDate'] = pd.to_datetime(df['productLaunchDate'], errors='coerce')
@@ -54,7 +53,6 @@ if not df.empty:
             (df['isRegionalRestricted'].str.lower() == 'true') &
             (df['assortmentText'].str.contains("Lokalt & småskaligt", na=False, case=False)) &
             (~df['isCompletelyOutOfStock'].str.lower().str.contains('true', na=False)) &
-            (~df['isTemporaryOutOfStock'].str.lower().str.contains('true', na=False)) &
             (df['productLaunchDate'] <= idag)
         ]        
         
