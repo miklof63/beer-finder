@@ -29,15 +29,21 @@ with st.spinner("Hämtar och analyserar Systembolagets databas (ca 73 MB)..."):
 # 2. FILTRERA FRAM DE UNIKA ÖLEN
 if not df.empty:
     try:
-        # Säkerställ att fälten tolkas korrekt som sanna/falska booleska värden
-        df['isRegionalRestricted'] = df['isRegionalRestricted'].fillna(False).astype(bool)
-        df['isTsLsAssortment'] = df['isTsLsAssortment'].fillna(False).astype(bool)
-        df['category'] = df['category'].astype(str)
+        # Omvandla de fält som faktiskt finns till textsträngar
+        df['productNameBold'] = df['productNameBold'].astype(str)
+        df['isRegionalRestricted'] = df['isRegionalRestricted'].astype(str)
+        # Eftersom 'category' är None, använder vi 'categoryLevel1' som innehåller ordet "Öl"
+        if 'categoryLevel1' in df.columns:
+            df['categoryLevel1'] = df['categoryLevel1'].astype(str)
+            cat_filter = df['categoryLevel1'].str.contains("Öl", na=False, case=False)
+        else:
+            cat_filter = True  # Fallback om kolumnen saknas
         
-        # Superren och exakt filtrering: Måste vara Öl, och antingen regionalt låst ELLER tillhöra TSLS
+        # Filtrera: Måste vara Öl (via categoryLevel1) och ha isRegionalRestricted='true'
         unika_ol = df[
-            (df['category'].str.contains("Öl", na=False, case=False))
-        ]
+            (cat_filter) & 
+            (df['isRegionalRestricted'].str.lower() == 'true')
+        ]        
         
         # Sortera i bokstavsordning på ölets namn
         if not unika_ol.empty:
