@@ -70,9 +70,9 @@ if not df.empty:
          
         # Skapa en flervalsmeny (multiselect) – förvald med alla stilar
         valda_stilar = st.multiselect(
-            "Välj ölstilar att visa:",
+            "Filtrera på specifika ölstilar (lämna tom för att visa alla):",
             options=tillgangliga_stilar,
-            default=tillgangliga_stilar
+            default=None
         )
         
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
@@ -80,9 +80,7 @@ if not df.empty:
         # Applicera användarens valda filter
         if valda_stilar:
             unika_ol = unika_ol[unika_ol['categoryLevel2'].isin(valda_stilar)]
-        else:
-            unika_ol = pd.DataFrame() # Tomt om användaren klickar bort alla stilar
-
+            
         if sokning:
             unika_ol = unika_ol[
                 (unika_ol['productNameBold'].astype(str).str.contains(sokning, na=False, case=False)) |
