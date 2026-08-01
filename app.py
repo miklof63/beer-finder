@@ -7,73 +7,80 @@ st.set_page_config(page_title="Lokal Öl-Hittare", page_icon="🍺", layout="cen
 st.title("🍺 Lokala öl du bara hittar HÄR")
 st.write("Denna app visar regional öl som finns på hyllan nu, men som inte går att beställa till andra orter.")
 
-# Lasta in ÄKTA och live data DIREKT vid start
-@st.cache_data(ttl=86400)
-def load_real_systembolaget_data():
-    butiker_url = "https://githubusercontent.com"
-    produkter_url = "https://githubusercontent.com"
+# 1. HÄMTA ÄKTA DATA FRÅN SYSTEMBOLAGET (Körs direkt vid start)
+@st.cache_data(ttl=86400)  # Sparar datan i 24 timmar så appen laddar blixtsnabbt
+def load_systembolaget_data():
+    stores_url = "https://githubusercontent.com"
+    products_url = "https://githubusercontent.com"
+    
     try:
-        butiker_res = requests.get(butiker_url, timeout=5).json()
-        produkter_res = requests.get(produkter_url, timeout=5).json()
-        return pd.DataFrame(butiker_res), pd.DataFrame(produkter_res)
-    except:
-        # Om externa nätverket blockeras, skapar vi en stabil backup-lista direkt
-        backup_butiker = pd.DataFrame([
+        stores_res = requests.get(stores_url, timeout=10).json()
+        products_res = requests.get(products_url, timeout=10).json()
+        return pd.DataFrame(stores_res), pd.DataFrame(products_res)
+    except Exception as e:
+        # Säkerhets-fallback om anropet blockeras
+        st.warning("Kunde inte hämta live-data, använder lokal reservlista.")
+        fallback_stores = pd.DataFrame([
             {"name": "Solna Centrum", "city": "Solna", "address": "Solna Torg 13"},
             {"name": "Stockholm Central", "city": "Stockholm", "address": "Centralplan 15"},
-            {"name": "Göteborg Nordstan", "city": "Göteborg", "address": "Nordstadstorget 2"},
-            {"name": "Malmö Hansa", "city": "Malmö", "address": "Malmborgsgatan 6"}
+            {"name": "Göteborg Nordstan", "city": "Göteborg", "address": "Nordstadstorget 2"}
         ])
-        backup_produkter = pd.DataFrame([
-            {"name": "Lokal Solna IPA", "category": "Öl", "assortment": "Lokalt & småskaligt", "is_orderable": False, "price": 32.50, "producer": "Solna Bryggeri"},
-            {"name": "Stockholm Stout", "category": "Öl", "assortment": "Lokalt & småskaligt", "is_orderable": False, "price": 39.00, "producer": "Söderort Brygg"}
+        fallback_products = pd.DataFrame([
+            {"name": "Lokal Solna IPA", "category": "Öl", "assortment": "Lokalt & småskaligt", "is_orderable": False, "price": 32.50, "producer": "Solna Bryggeri"}
         ])
-        return backup_butiker, backup_produkter
+        return fallback_stores, fallback_products
 
-# Kör dataladdningen direkt
-butiker_df, produkter_df = load_real_systembolaget_data()
+# Starta dataladdning direkt
+with st.spinner("Hämtar färsk data från Systembolagets databas..."):
+    butiker_df, produkter_df = load_systembolaget_data()
 
-st.subheader("1. Sök på din ort eller stad")
+# 2. BYGG GRÄNSSNITTET (Helt frikopplat från gammal GPS-kod)
+st.subheader("1. Välj din ort eller stad")
 
 if not butiker_df.empty:
-    # Hämta alla unika städer från datan
-    orter_i_listan = sorted(butiker_df['city'].dropna().unique())
+    # Rensar tomma rader och sorterar alla svenska städer i bokstavsordning
+    alla_orter = sorted(butiker_df['city'].dropna().unique())
     
-    # Skapa rullistan direkt på skärmen så du kan klicka dig vidare
-    vald_ort = st.selectbox("Välj vilken ort du befinner dig i:", orter_i_listan)
+    # Skapar den första rullistan på skärmen
+    vald_ort = st.selectbox("Vilken ort befinner du dig i?", alla_orter)
     
-    # Filtrera fram butiker baserat på staden
+    # Filtrera fram butiker som ligger i den valda staden
     butiker_pa_ort = butiker_df[butiker_df['city'] == vald_ort]
     
-    if len(butiker_pa_ort) > 0:
+    if not butiker_pa_ort.empty:
+        # Om staden har flera butiker (t.ex. Stockholm), visa en rullista till
         if len(butiker_pa_ort) > 1:
-            butiks_namn = st.selectbox("Välj specifik butik i staden:", butiker_pa_ort['name'].unique())
+            butiks_namn = st.selectbox("Välj specifik butik:", butiker_pa_ort['name'].unique())
             vald_butik = butiker_pa_ort[butiker_pa_ort['name'] == butiks_namn].iloc[0]
         else:
             vald_butik = butiker_pa_ort.iloc[0]
             
-        # 2. Visa resultatet direkt på skärmen
+        # 3. VISA DET LOKALA SORTIMENTET
         st.write("---")
         st.subheader(f"2. Visar öl för: Systembolaget {vald_butik['name']}")
         st.caption(f"📍 Adress: {vald_butik['address']}, {vald_butik['city']}")
         
-        # Filtrera fram dolda ölen
         if not produkter_df.empty:
-            lokala_ol = produkter_df[
+            # Sortera ut: Endast Öl, Endast "Lokalt & småskaligt", och is_orderable ska vara Falskt (False)
+            unika_lokala_ol = produkter_df[
                 (produkter_df['category'] == "Öl") & 
-                (produkter_df['assortment'] == "Lokalt & småskaligt") & 
+                (produkter_df['assortment'].str.contains("Lokalt & småskaligt", na=False)) & 
                 (produkter_df['is_orderable'] == False)
             ]
             
-            if not lokala_ol.empty:
-                st.write("### 🔒 Unika lokala öl (Går ej att beställa till andra orter):")
-                # Visar max 15 öl
-                for idx, row in lokala_ol.head(15).iterrows():
-                    producent = row['producer'] if pd.notna(row['producer']) else "Lokalt bryggeri"
-                    st.info(f"🍺 **{row['name']}** ({producent}) — {row['price']} kr")
+            if not unika_lokala_ol.empty:
+                st.write(f"### 🔒 Hittade {len(unika_lokala_ol.head(20))} unika öl i närområdet:")
+                st.write("Dessa säljs på hyllan lokalt men kan inte beställas till andra städer.")
+                
+                # Loopa ut de första 20 ölen snyggt på skärmen
+                for idx, row in unika_lokala_ol.head(20).iterrows():
+                    bryggeri = row['producer'] if pd.notna(row['producer']) and row['producer'] != "" else "Lokalt bryggeri"
+                    st.info(f"🍺 **{row['name']}** ({bryggeri}) — {row['price']} kr")
             else:
-                st.write("Just nu saknas spärrade lokala öl i databasen för denna region.")
+                st.write("Just nu hittades inga spärrade lokala öl för denna specifika butik i databasen.")
+        else:
+            st.error("Kunde inte läsa in produktlistan.")
     else:
-        st.error("Hittade inga butiker för den valda orten.")
+        st.error("Inga butiker hittades på den valda orten.")
 else:
-    st.error("Kunde inte läsa in städerna från databasen.")
+    st.error("Kunde inte ladda in städerna från Systembolagets databas.")
