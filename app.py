@@ -55,18 +55,23 @@ if not df.empty:
             (~df['isCompletelyOutOfStock'].str.lower().str.contains('true', na=False)) &
             (df['productLaunchDate'] <= idag)
         ]        
+        # 3. LÄS IN SPARADE INSTÄLLNINGAR FRÅN URL:EN (BFF-FRONTEND LOGIK)
+        params = st.query_params
         
-        # Sortera i bokstavsordning på ölets namn
-        if not unika_ol.empty:
-            unika_ol = unika_ol.sort_values(by="productNameBold")
+        # Hämta sparad stil (om den finns, annars default "Ale")
+        sparad_stil = params.get("stil", "Ale")
+        # Hämta sparade smakklockor (omvandla till heltal, sök efter defaults om de saknas)
+        def_beska = int(params.get("beska", 0))
+        def_fyllighet = int(params.get("fyll", 0))
+        def_sotma = int(params.get("sotma", 12))
 
-        # 3. SÖKFÄLT FÖR ANVÄNDAREN
+        # 4. SÖKFÄLT FÖR ANVÄNDAREN
         st.subheader("Filtrera och sök")
         
         # Dynamiskt hämta de ölstilar som faktiskt finns i vårt matchade resultat
         tillgangliga_stilar = sorted(unika_ol['categoryLevel2'].unique())
 
-        default_val = ["Ale"] if "Ale" in tillgangliga_stilar else None
+        default_val = [sparad_stil] if sparad_stil in tillgangliga_stilar else None
         
         # Skapa en flervalsmeny (multiselect) – förvald med alla stilar
         valda_stilar = st.multiselect(
@@ -76,9 +81,9 @@ if not df.empty:
         )
         # Skjutreglage för smakklockor (0-12, där 0 betyder "Filtrera inte")
         st.write("**Justera smakprofil (0-12):**")
-        min_beska = st.slider("Minsta beska (bitterness:)", 0, 12, 0)
-        min_fyllighet = st.slider("Minsta fyllighet (body):", 0, 12, 0)
-        max_sotma = st.slider("Maximal sötma (sweetness):", 0, 12, 2)
+        min_beska = st.slider("Minsta beska (bitterness:)", 0, 12, def_beska)
+        min_fyllighet = st.slider("Minsta fyllighet (body):", 0, 12, def_fyllighet)
+        max_sotma = st.slider("Maximal sötma (sweetness):", 0, 12, def_sotma)
         
         # Sökfält för fritext (bryggeri eller stad)
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
@@ -118,8 +123,12 @@ if not df.empty:
                 (unika_ol['producerName'].astype(str).str.contains(sokning, na=False, case=False)) |
                 (unika_ol['productNameThin'].astype(str).str.contains(sokning, na=False, case=False))
             ]
+            
+        # Sortera i bokstavsordning på ölets namn
+        if not unika_ol.empty:
+            unika_ol = unika_ol.sort_values(by="productNameBold")
 
-        # 4. VISA RESULTATET
+        # 6. VISA RESULTATET
         st.write("---")
         st.subheader(f"Hittade {len(unika_ol)} unika öl")
         
