@@ -83,6 +83,20 @@ if not df.empty:
         # Sökfält för fritext (bryggeri eller stad)
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
 
+        # 5. KNAPP FÖR ATT SPARA INSTÄLLNINGARNA TILL ADRESSFÄLTET
+        if st.button("💾 Spara mina inställningar som förval"):
+            # Spara den första valda stilen om det finns någon, annars tomt
+            aktuell_stil = valda_stilar[0] if valda_stilar else ""
+            
+            # Skriv värdena direkt till URL-fältet i webbläsaren
+            st.query_params.update({
+                "stil": aktuell_stil,
+                "beska": min_beska,
+                "fyll": min_fyllighet,
+                "sotma": max_sotma
+            })
+            st.success("Inställningarna sparade i adressfältet! Spara sidan som bokmärke på hemskärmen i din iPhone för att alltid starta så här. 🚀")
+
         # Applicera användarens valda filter
         if valda_stilar:
             unika_ol = unika_ol[unika_ol['categoryLevel2'].isin(valda_stilar)]
