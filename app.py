@@ -153,9 +153,19 @@ if not df.empty:
                 artikel_nummer = row.get('productNumber', '')
                 direct_url = f"https://www.systembolaget.se/produkt/ol/{artikel_nummer}/"
                 
+                # Hämta ursprung (län och kommun)
+                lan = row.get('originLevel1', '')
+                kommun = row.get('originLevel2', '')
+                ursprung_delar = []
+                if pd.notna(lan) and lan != "" and lan != "None":
+                    ursprung_delar.append(str(lan))
+                if pd.notna(kommun) and kommun != "" and kommun != "None":
+                    ursprung_delar.append(str(kommun))
+                ursprung_text = f" | 📍 **Ursprung:** {', '.join(ursprung_delar)}" if ursprung_delar else ""
+                
                 st.info(
                     f"🍺 **{namn}** *{tillägg_text}*\n\n"
-                    f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}  \n"
+                    f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}\n\n"
                     f"🔗 [Visa på Systembolaget.se]({direct_url})"
                 )
