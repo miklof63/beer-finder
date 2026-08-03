@@ -189,9 +189,11 @@ if not df.empty:
                 st.info(
                     f"🍺 **{namn}** *{tillägg_text}*\n\n"
                     f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
-                    f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}\n\n"
-                    f"🔗 [Visa på Systembolaget.se]({direct_url})"
+                    f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}"
                 )
+                # En stor, bred och responsiv knapp under infoboxen
+                st.link_button("🌐 Visa på Systembolaget", direct_url, use_container_width=True)
+
             # Visa en "Visa fler"-knapp om det finns fler öl
             if len(unika_ol) > st.session_state['antal_visade']:
                 if st.button("🔽 Visa fler öl"):
