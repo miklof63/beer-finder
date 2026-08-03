@@ -86,9 +86,10 @@ if not df.empty:
         # Skapa en sifferlista från 0 till 12 för menyerna
         skala = list(range(13))
         
-        min_beska = st.selectbox("Minsta beska (bitterness):", options=skala, index=def_beska)
-        min_fyllighet = st.selectbox("Minsta fyllighet (body):", options=skala, index=def_fyllighet)
-        max_sotma = st.selectbox("Maximal sötma (sweetness):", options=skala, index=def_sotma)
+        # st.pills ritar ut snygga, klickbara knappar i en horisontell rad utan tangentbord
+        min_beska = st.pills("Minsta beska (bitterness):", options=skala, default=def_beska)
+        min_fyllighet = st.pills("Minsta fyllighet (body):", options=skala, default=def_fyllighet)
+        max_sotma = st.pills("Maximal sötma (sweetness):", options=skala, default=def_sotma)
         
         # Sökfält för fritext (bryggeri eller stad)
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
