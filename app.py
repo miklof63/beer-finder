@@ -161,9 +161,14 @@ if not df.empty:
             for idx, row in unika_ol. head(st.session_state['antal_visade']). iterrows():
                 namn = row.get('productNameBold', 'Okänt namn')
                 tillägg = row.get('productNameThin', '')
-                tillägg_text = tillägg if pd.notna(tillägg) else ""
                 bryggeri = row.get('producerName', 'Lokalt bryggeri')
                 bryggeri_text = bryggeri if pd.notna(bryggeri) else "Lokalt bryggeri"
+                # SÄKERHETSRENSNING (Bort med bryggerinamn från tilläggstexten)
+                tillägg_text = ""
+                if pd.notna(tillägg) and tillägg != "" and tillägg != "None":
+                    # Om tillägget är exakt samma som bryggeriet, eller finns inuti bryggeristrängen, hoppa över det
+                    if str(tillägg).lower().strip() not in str(bryggeri_text).lower() and str(bryggeri_text).lower() not in str(tillägg).lower():
+                        tillägg_text = f" {tillägg}"
                 pris = row.get('price', 'N/A')
                 alkohol = row.get('alcoholPercentage', 'N/A')
                 volym = row.get('volumeText', '')
