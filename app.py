@@ -81,11 +81,14 @@ if not df.empty:
             options=tillgangliga_stilar,
             default=default_val
         )
-        # Skjutreglage för smakklockor (0-12, där 0 betyder "Filtrera inte")
+        # Menyer för smakklockor (0-12, där 0 betyder "Filtrera inte")
         st.write("**Justera smakprofil (0-12):**")
-        min_beska = st.slider("Minsta beska (bitterness:)", 0, 12, def_beska)
-        min_fyllighet = st.slider("Minsta fyllighet (body):", 0, 12, def_fyllighet)
-        max_sotma = st.slider("Maximal sötma (sweetness):", 0, 12, def_sotma)
+        # Skapa en sifferlista från 0 till 12 för menyerna
+        skala = list(range(13))
+        
+        min_beska = st.selectbox("Minsta beska (bitterness):", options=skala, index=def_beska)
+        min_fyllighet = st.selectbox("Minsta fyllighet (body):", options=skala, index=def_fyllighet)
+        max_sotma = st.selectbox("Maximal sötma (sweetness):", options=skala, index=def_sotma)
         
         # Sökfält för fritext (bryggeri eller stad)
         sokning = st.text_input("Skriv t.ex. namnet på ett bryggeri eller en ort (t.ex. Solna, Uppsala, Poppels):", "")
