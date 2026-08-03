@@ -58,8 +58,10 @@ if not df.empty:
         # 3. LÄS IN SPARADE INSTÄLLNINGAR FRÅN URL:EN (BFF-FRONTEND LOGIK)
         params = st.query_params
         
-        # Hämta sparad stil (om den finns, annars default "Ale")
-        sparad_stil = params.get("stil", "Ale")
+        # Hämta sparade stilar
+        sparade_stilar_raw = params.get("stil", "")
+        sparade_stilar = [s.strip() for s in sparade_stilar_raw.split(",") if s.strip()] if sparade_stilar_raw else None
+
         # Hämta sparade smakklockor (omvandla till heltal, sök efter defaults om de saknas)
         def_beska = int(params.get("beska", 0))
         def_fyllighet = int(params.get("fyll", 0))
@@ -71,8 +73,8 @@ if not df.empty:
         # Dynamiskt hämta de ölstilar som faktiskt finns i vårt matchade resultat
         tillgangliga_stilar = sorted(unika_ol['categoryLevel2'].unique())
 
-        default_val = [sparad_stil] if sparad_stil in tillgangliga_stilar else None
-        
+        default_val = [s for s in sparade_stilar if s in tillgangliga_stilar] if sparade_stilar else None
+
         # Skapa en flervalsmeny (multiselect) – förvald med alla stilar
         valda_stilar = st.multiselect(
             "Filtrera på specifika ölstilar (lämna tom för att visa alla):",
@@ -91,7 +93,7 @@ if not df.empty:
         # 5. KNAPP FÖR ATT SPARA INSTÄLLNINGARNA TILL ADRESSFÄLTET
         if st.button("💾 Spara mina inställningar som förval"):
             # Spara den första valda stilen om det finns någon, annars tomt
-            aktuell_stil = valda_stilar[0] if valda_stilar else ""
+            aktuell_stil = ",".join(valda_stilar) if valda_stilar else ""
             
             # Skriv värdena direkt till URL-fältet i webbläsaren
             st.query_params.update({
