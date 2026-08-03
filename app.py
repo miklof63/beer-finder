@@ -138,8 +138,18 @@ if not df.empty:
         st.subheader(f"Hittade {len(unika_ol)} unika öl")
         
         if not unika_ol.empty:
-            # Visa de första 30 träffarna snyggt på skärmen
-            for idx, row in unika_ol.head(30).iterrows():
+            # SÄKERHET: Om listans totala längd ändras (t.ex. vid ny sökning),
+            # nollställer vi räknaren så att vi inte råkar stanna kvar på ett högt antal
+            if 'senaste_antal' not in st.session_state or st.session_state['senaste_antal'] != len(unika_ol):
+                st.session_state['antal_visade'] = 30
+                st.session_state['senaste_antal'] = len(unika_ol)
+                
+            # Hantera hur många öl som ska visas via sessionsminnet
+            if 'antal_visade' not in st.session_state:
+                st.session_state['antal_visade'] = 30
+               
+            # Loopa ut det antal öl som är inställt
+            for idx, row in unika_ol. head(st.session_state['antal_visade']). iterrows():
                 namn = row.get('productNameBold', 'Okänt namn')
                 tillägg = row.get('productNameThin', '')
                 tillägg_text = tillägg if pd.notna(tillägg) else ""
@@ -173,6 +183,11 @@ if not df.empty:
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}\n\n"
                     f"🔗 [Visa på Systembolaget.se]({direct_url})"
                 )
+            # Visa en "Visa fler"-knapp om det finns fler öl
+            if len(unika_ol) > st.session_state['antal_visade']:
+                if st.button("🔽 Visa fler öl"):
+                    st.session_state['antal_visade'] += 30
+                    st.rerun() # Ladda om sidan med 30 nya öl                
         else:
             st.write("Inga unika, spärrade öl matchade din sökning just nu.")
 
