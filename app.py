@@ -168,7 +168,12 @@ if not df.empty:
                 if pd.notna(tillägg) and tillägg != "" and tillägg != "None":
                     # Om tillägget är exakt samma som bryggeriet, eller finns inuti bryggeristrängen, hoppa över det
                     if str(tillägg).lower().strip() not in str(bryggeri_text).lower() and str(bryggeri_text).lower() not in str(tillägg).lower():
-                        tillägg_text = f" {tillägg}"
+                        tillägg_text = str(tillägg).strip()
+                # NYTT: Dynamisk rubrik som förhindrar tomma formateringsstjärnor (**)
+                if tillägg_text:
+                    full_rubrik = f"🍺 **{namn}** *{tillägg_text}*"
+                else:
+                    full_rubrik = f"🍺 **{namn}**"
                 pris = row.get('price', 'N/A')
                 alkohol = row.get('alcoholPercentage', 'N/A')
                 volym = row.get('volumeText', '')
@@ -192,7 +197,7 @@ if not df.empty:
                 ursprung_text = f" | 📍 **Ursprung:** {', '.join(ursprung_delar)}" if ursprung_delar else ""
                 
                 st.info(
-                    f"🍺 **{namn}** *{tillägg_text}*\n\n"
+                    f"{full_rubrik}\n\n"
                     f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}"
                 )
