@@ -158,9 +158,13 @@ if not df.empty:
                 kommun = row.get('originLevel2', '')
                 ursprung_delar = []
                 if pd.notna(lan) and lan != "" and lan != "None":
-                    ursprung_delar.append(str(lan))
+                    # Rensar bort "län" och "s län"
+                    rent_lan = str(lan).replace("s län", "").replace(" län", "")
+                    ursprung_delar.append(rent_lan)
                 if pd.notna(kommun) and kommun != "" and kommun != "None":
-                    ursprung_delar.append(str(kommun))
+                    # Rensar bort "kommun" och "s kommun"
+                    ren_kommun = str(kommun).replace("s kommun", "").replace(" kommun", "")
+                    ursprung_delar.append(ren_kommun)
                 ursprung_text = f" | 📍 **Ursprung:** {', '.join(ursprung_delar)}" if ursprung_delar else ""
                 
                 st.info(
