@@ -121,7 +121,9 @@ if not df.empty:
             unika_ol = unika_ol[
                 (unika_ol['productNameBold'].astype(str).str.contains(sokning, na=False, case=False)) |
                 (unika_ol['producerName'].astype(str).str.contains(sokning, na=False, case=False)) |
-                (unika_ol['productNameThin'].astype(str).str.contains(sokning, na=False, case=False))
+                (unika_ol['productNameThin'].astype(str).str.contains(sokning, na=False, case=False)) |
+                (unika_ol['originLevel1'].astype(str).str.contains(sokning, na=False, case=False)) |
+                (unika_ol['originLevel2'].astype(str).str.contains(sokning, na=False, case=False)) 
             ]
             
         # Sortera i bokstavsordning på ölets namn
