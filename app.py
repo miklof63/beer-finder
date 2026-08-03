@@ -117,10 +117,15 @@ if not df.empty:
         unika_ol['tasteClockBody'] = pd.to_numeric(unika_ol['tasteClockBody'], errors='coerce').fillna(0)
         unika_ol['tasteClockSweetness'] = pd.to_numeric(unika_ol['tasteClockSweetness'], errors='coerce').fillna(0)
 
+        # Hantera fallbacks om piller klickas ur helt
+        v_beska = min_beska if min_beska is not None else 0
+        v_fyll = min_fyllighet if min_fyllighet is not None else 0
+        v_sot = max_sotma if max_sotma is not None else 12
+        
         unika_ol = unika_ol[
-            (unika_ol['tasteClockBitter'] >= min_beska) &
-            (unika_ol['tasteClockBody'] >= min_fyllighet) &
-            (unika_ol['tasteClockSweetness'] <= max_sotma)
+            (unika_ol['tasteClockBitter'] >= v_beska) &
+            (unika_ol['tasteClockBody'] >= v_fyll) &
+            (unika_ol['tasteClockSweetness'] <= v_sot)
         ]
 
         if sokning:
