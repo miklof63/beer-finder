@@ -208,9 +208,9 @@ if not df.empty:
                     f"{full_rubrik}\n\n"
                     f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym} |📊 **Smakprofil:**  \n"
-                    f"**B:** `{beska_cirklar}`  {beska_v}  \n"
-                    f"**F:** `{fyll_cirklar}`  {fyll_v}  \n"
-                    f"**S:** `{sot_cirklar}`  {sot_v}"
+                    f"`{beska_cirklar}`  {beska_v} **Beska**   \n"
+                    f"`{fyll_cirklar}`  {fyll_v} **Fyllighet**  \n"
+                    f"`{sot_cirklar}`  {sot_v} **Sötma**"
                 )
                 # En stor, bred och responsiv knapp under infoboxen
                 st.link_button(f"🌐 {tillägg_text} på Systembolaget", direct_url, use_container_width=True)
