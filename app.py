@@ -208,7 +208,7 @@ if not df.empty:
                 st.info(
                     f"{full_rubrik}\n\n"
                     f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
-                    f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym} |📊 **Smakprofil:** \n"
+                    f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym} |📊 **Smakprofil:**  \n"
                     f"{beska_klocka} **Beska:** {beska_v}/12  \n"
                     f"{fyll_klocka} **Fyllighet:** {fyll_v}/12  \n"
                     f"{sot_klocka} **Sötma:** {sot_v}/12"
