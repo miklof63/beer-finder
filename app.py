@@ -202,7 +202,7 @@ if not df.empty:
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}"
                 )
                 # En stor, bred och responsiv knapp under infoboxen
-                st.link_button(f"🌐 Visa {namn} {tillägg_text} på Systembolaget", direct_url, use_container_width=True)
+                st.link_button(f"🌐 {tillägg_text} på Systembolaget", direct_url, use_container_width=True)
 
             # Visa en "Visa fler"-knapp om det finns fler öl
             if len(unika_ol) > st.session_state['antal_visade']:
