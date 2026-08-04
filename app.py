@@ -141,11 +141,51 @@ if not df.empty:
         # Sortera i bokstavsordning på ölets namn
         if not unika_ol.empty:
             unika_ol = unika_ol.sort_values(by="productNameBold")
-
+        lan_koordinater = {
+            "Stockholms län": {"lat": 59.3293, "lon": 18.0686},
+            "Västra Götalands län": {"lat": 58.2000, "lon": 12.6000},
+            "Skåne län": {"lat": 55.9903, "lon": 13.4417},
+            "Uppsala län": {"lat": 59.9500, "lon": 17.5000},
+            "Södermanlands län": {"lat": 58.9167, "lon": 16.7500},
+            "Östergötlands län": {"lat": 58.4109, "lon": 15.6216},
+            "Jönköpings län": {"lat": 57.5000, "lon": 14.3333},
+            "Kronobergs län": {"lat": 56.6667, "lon": 14.3333},
+            "Kalmar län": {"lat": 57.0000, "lon": 16.0000},
+            "Gotlands län": {"lat": 57.5000, "lon": 18.5000},
+            "Blekinge län": {"lat": 56.2500, "lon": 15.0000},
+            "Hallands län": {"lat": 56.7500, "lon": 12.8333},
+            "Värmlands län": {"lat": 59.7500, "lon": 13.2500},
+            "Örebro län": {"lat": 59.5000, "lon": 15.0000},
+            "Västmanlands län": {"lat": 59.7500, "lon": 16.3333},
+            "Dalarnas län": {"lat": 61.0000, "lon": 14.5000},
+            "Gävleborgs län": {"lat": 61.2500, "lon": 16.5000},
+            "Västernorrlands län": {"lat": 63.0000, "lon": 17.5000},
+            "Jämtlands län": {"lat": 63.0000, "lon": 14.5000},
+            "Västerbottens län": {"lat": 65.0000, "lon": 17.5000},
+            "Norrbottens län": {"lat": 67.0000, "lon": 20.0000}
+        }
+        
+        kart_rader = []
+        for lan_namn, koord in lan_koordinater.items():
+            # Vi räknar nu i den färdigfiltrerade 'unika_ol'-tabellen!
+            antal_i_lan = len(unika_ol[unika_ol['originLevel1'].astype(str) == lan_namn])
+            if antal_i_lan > 0:
+                kart_rader.append({
+                    "latitude": koord["lat"],
+                    "longitude": koord["lon"],
+                    "Antal öl": antal_i_lan * 15  # Multipliceras lite så bubblorna syns bra i mobilen
+                })
+        map_df = pd.DataFrame(kart_rader)
+        
         # 6. VISA RESULTATET
         st.write("---")
         st.subheader(f"Hittade {len(unika_ol)} unika öl")
-        
+        # Rendera kartan precis ovanför öl-listan, helt dynamiskt!
+        if not map_df.empty:
+            st.write("**🗺️ Geografisk spridning för ditt valda filter:**")
+            st.map(map_df, latitude="latitude", longitude="longitude", size="Antal öl")
+            st.write("---")
+            
         if not unika_ol.empty:
             # SÄKERHET: Om listans totala längd ändras (t.ex. vid ny sökning),
             # nollställer vi räknaren så att vi inte råkar stanna kvar på ett högt antal
