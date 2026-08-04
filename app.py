@@ -208,8 +208,8 @@ if not df.empty:
                     f"{full_rubrik}\n\n"
                     f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym} |📊 **Smakprofil:**  \n"
-                    f"{beska_cirklar} {beska_v}/12 Beska\n"
-                    f"{fyll_cirklar} {fyll_v}/12 Fyllighet\n"
+                    f"{beska_cirklar} {beska_v}/12 Beska \n"
+                    f"{fyll_cirklar} {fyll_v}/12 Fyllighet \n"
                     f"{sot_cirklar} {sot_v}/12 Sötma"
                 )
                 # En stor, bred och responsiv knapp under infoboxen
