@@ -195,22 +195,24 @@ if not df.empty:
                     ren_kommun = str(kommun).replace("s kommun", "").replace(" kommun", "")
                     ursprung_delar.append(ren_kommun)
                 ursprung_text = f" | 📍 **Ursprung:** {', '.join(ursprung_delar)}" if ursprung_delar else ""
+
                 beska_v = int(row.get('tasteClockBitter', 0))
                 fyll_v = int(row.get('tasteClockBody', 0))
                 sot_v = int(row.get('tasteClockSweetness', 0))
-
-                # Monospace-säkrade cirklar (Tvingar fram exakt samma teckenbredd för blocket)
-                beska_cirklar = f"`{'●' * beska_v}{'○' * (12 - beska_v)}`"
-                fyll_cirklar = f"`{'●' * fyll_v}{'○' * (12 - fyll_v)}`"
-                sot_cirklar = f"`{'●' * sot_v}{'○' * (12 - sot_v)}`"
-
+                beska_cirklar = f"{'●' * beska_v}{'○' * (12 - beska_v)}"
+                fyll_cirklar = f"{'●' * fyll_v}{'○' * (12 - fyll_v)}"
+                sot_cirklar = f"{'●' * sot_v}{'○' * (12 - sot_v)}"
+                siffra_beska = f"{beska_v}/12".rjust(5)
+                siffra_fyll = f"{fyll_v}/12".rjust(5)
+                siffra_sot = f"{sot_v}/12".rjust(5)
+                
                 st.info(
                     f"{full_rubrik}\n\n"
                     f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym} |📊 **Smakprofil:**  \n"
-                    f"{beska_cirklar} {beska_v}/12 Beska  \n"
-                    f"{fyll_cirklar} {fyll_v}/12 Fyllighet  \n"
-                    f"{sot_cirklar} {sot_v}/12 Sötma"
+                    f"`{beska_cirklar} {siffra_beska} Beska`  \n"
+                    f"`{fyll_cirklar} {siffra_fyll} Fyllighet`  \n"
+                    f"`{sot_cirklar} {siffra_sot} Sötma`"
                 )
                 # En stor, bred och responsiv knapp under infoboxen
                 st.link_button(f"🌐 {tillägg_text} på Systembolaget", direct_url, use_container_width=True)
