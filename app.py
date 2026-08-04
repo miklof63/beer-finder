@@ -199,18 +199,18 @@ if not df.empty:
                 fyll_v = int(row.get('tasteClockBody', 0))
                 sot_v = int(row.get('tasteClockSweetness', 0))
 
-                # Skapa stora, tydliga cirkel-mätare baserat på Systembolagets princip
-                beska_cirklar = "●" * beska_v + "○" * (12 - beska_v)
-                fyll_cirklar = "●" * fyll_v + "○" * (12 - fyll_v)
-                sot_cirklar = "●" * sot_v + "○" * (12 - sot_v)
+                # Monospace-säkrade cirklar (Tvingar fram exakt samma teckenbredd för blocket)
+                beska_cirklar = f"`{'●' * beska_v}{'○' * (12 - beska_v)}`"
+                fyll_cirklar = f"`{'●' * fyll_v}{'○' * (12 - fyll_v)}`"
+                sot_cirklar = f"`{'●' * sot_v}{'○' * (12 - sot_v)}`"
 
                 st.info(
                     f"{full_rubrik}\n\n"
                     f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
                     f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym} |📊 **Smakprofil:**  \n"
-                    f"`{beska_cirklar}`  {beska_v} **Beska**   \n"
-                    f"`{fyll_cirklar}`  {fyll_v} **Fyllighet**  \n"
-                    f"`{sot_cirklar}`  {sot_v} **Sötma**"
+                    f"{beska_cirklar} {beska_v}/12 Beska\n"
+                    f"{fyll_cirklar} {fyll_v}/12 Fyllighet\n"
+                    f"{sot_cirklar} {sot_v}/12 Sötma"
                 )
                 # En stor, bred och responsiv knapp under infoboxen
                 st.link_button(f"🌐 {tillägg_text} på Systembolaget", direct_url, use_container_width=True)
