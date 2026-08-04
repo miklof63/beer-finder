@@ -195,11 +195,24 @@ if not df.empty:
                     ren_kommun = str(kommun).replace("s kommun", "").replace(" kommun", "")
                     ursprung_delar.append(ren_kommun)
                 ursprung_text = f" | 📍 **Ursprung:** {', '.join(ursprung_delar)}" if ursprung_delar else ""
-                
+                beska_v = int(row.get('tasteClockBitter', 0))
+                fyll_v = int(row.get('tasteClockBody', 0))
+                sot_v = int(row.get('tasteClockSweetness', 0))
+
+                # Översätt dagsaktuella siffror till runda klock-emojis (0-12)
+                klockor = {0: "⭕", 1: "🕐", 2: "🕑", 3: "🕒", 4: "🕓", 5: "🕔", 6: "🕕", 7: "🕖", 8: "🕗", 9: "🕘", 10: "🕙", 11: "🕚", 12: "🕛"}                
+                beska_klocka = klockor.get(beska_v, "⭕")
+                fyll_klocka = klockor.get(fyll_v, "⭕")
+                sot_klocka = klockor.get(sot_v, "⭕")
+
                 st.info(
                     f"{full_rubrik}\n\n"
                     f"**Stil:** {stil} | **Bryggeri:** {bryggeri_text}{ursprung_text}  \n"
-                    f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}"
+                    f"**Pris:** {pris} kr | **Styrka:** {alkohol}% | **Storlek:** {volym}\n"
+                    f"📊 **Smakprofil:**  \n"
+                    f"{beska_klocka} **Beska:** {beska_v}/12  \n"
+                    f"{fyll_klocka} **Fyllighet:** {fyll_v}/12  \n"
+                    f"{sot_klocka} **Sötma:** {sot_v}/12"
                 )
                 # En stor, bred och responsiv knapp under infoboxen
                 st.link_button(f"🌐 {tillägg_text} på Systembolaget", direct_url, use_container_width=True)
