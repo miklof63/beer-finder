@@ -170,13 +170,12 @@ if not df.empty:
             # Vi räknar nu i den färdigfiltrerade 'unika_ol'-tabellen!
             antal_i_lan = len(unika_ol[unika_ol['originLevel1'].astype(str) == lan_namn])
             if antal_i_lan > 0:
-                # Metrisk skalning (10 000 meter = 1 mil i radie per öl)
-                # Detta gör att bubblorna blir massiva på en utzoomad Sverigekarta!
-                skalad_storlek = antal_i_lan * 10000
                 kart_rader.append({
                     "latitude": koord["lat"],
                     "longitude": koord["lon"],
-                    "Antal öl": skalad_storlek
+                   "antal": antal_i_lan,
+                    # Ren pixel-storlek: 1 öl = 10 pixlar bred bubbla. 50 öl = 50 pixlar bred bubbla!
+                    "radius": antal_i_lan * 1.5
                 })
         map_df = pd.DataFrame(kart_rader)
         
@@ -186,7 +185,29 @@ if not df.empty:
         # Rendera kartan precis ovanför öl-listan, helt dynamiskt!
         if not map_df.empty:
             st.write("**🗺️ Geografisk spridning för ditt valda filter:**")
-            st.map(map_df, latitude="latitude", longitude="longitude", size="Antal öl")
+            import pydeck as pdk
+            
+            st.pydeck_chart(pdk.Deck(
+                map_style='mapbox://styles/mapbox/light-v9',
+                initial_view_state=pdk.ViewState(
+                    latitude=62.0,
+                    longitude=15.0,
+                    zoom=4,
+                    pitch=0,
+                ),
+                layers=[
+                    pdk.Layer(
+                        'ScatterplotLayer',
+                        data=map_df,
+                        get_position='[longitude, latitude]',
+                        get_color='[255, 75, 75, 160]', # Snygg halvtransparent röd färg
+                        get_radius='radius',
+                        radius_scale=10000, # Denna skalar upp radien baserat på dina pixel-tal!
+                        radius_min_pixels=5,  # Minsta lilla prick ska synas (5 pixlar)
+                        radius_max_pixels=60, # Maximala bubblan får bli fet (60 pixlar)
+                    ),
+                ],
+            ))
             st.write("---")
             
         if not unika_ol.empty:
