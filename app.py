@@ -183,9 +183,8 @@ if not df.empty:
         # 6. VISA RESULTATET
         st.write("---")
         st.subheader(f"Hittade {len(unika_ol)} unika öl")
-        # Rendera kartan precis ovanför öl-listan, helt dynamiskt!
+        # Rendera kartan precis ovanför öl-listan
         if not map_df.empty:
-            st.write("**🗺️ Geografisk spridning för ditt valda filter:**")
             import pydeck as pdk
             
             # Lägg kartan inuti en stängd, utfällbar panel för att spara mobilskärm
@@ -209,7 +208,6 @@ if not df.empty:
                         ),
                     ],
                 ))
-            st.write("---")
             
         if not unika_ol.empty:
             # SÄKERHET: Om listans totala längd ändras (t.ex. vid ny sökning),
