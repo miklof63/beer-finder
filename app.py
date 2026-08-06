@@ -188,25 +188,27 @@ if not df.empty:
             st.write("**🗺️ Geografisk spridning för ditt valda filter:**")
             import pydeck as pdk
             
-            st.pydeck_chart(pdk.Deck(
-                map_style='road',
-                initial_view_state=pdk.ViewState(
-                    latitude=62.0,
-                    longitude=15.0,
-                    zoom=4,
-                    pitch=0,
-                ),
-                layers=[
-                    pdk.Layer(
-                        'ScatterplotLayer',
-                        data=map_df,
-                        get_position='[longitude, latitude]',
-                        get_color='[255, 75, 75, 140]',
-                        get_radius='radius',
-                        radius_scale=1,       # Styr helt utifrån våra rena pixel-tal
+            # Lägg kartan inuti en stängd, utfällbar panel för att spara mobilskärm
+            with st.expander("🗺️ Visa geografisk spridning"):
+                st.pydeck_chart(pdk.Deck(
+                    map_style='road',
+                    initial_view_state=pdk.ViewState(
+                        latitude=62.0,
+                        longitude=15.0,
+                        zoom=4,
+                        pitch=0,
                     ),
-                ],
-            ))
+                    layers=[
+                        pdk.Layer(
+                            'ScatterplotLayer',
+                            data=map_df,
+                            get_position='[longitude, latitude]',
+                            get_color='[255, 75, 75, 140]', 
+                            get_radius='radius',
+                            radius_scale=1,       
+                        ),
+                    ],
+                ))
             st.write("---")
             
         if not unika_ol.empty:
