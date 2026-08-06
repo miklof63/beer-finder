@@ -174,8 +174,9 @@ if not df.empty:
                     "latitude": koord["lat"],
                     "longitude": koord["lon"],
                     "antal": antal_i_lan,
-                    # Äkta meter på jorden. Startar på 10 km och växer med 4 km per öl!
-                    "radius": 10000 + (antal_i_lan * 4000)
+                    # Harmonisk dämpning med kvadratrot (Äkta meter)
+                    # Ger ca 2.5 mil radie för 1 öl, och stannar runt 9 mil för 50 öl!
+                    "radius": 15000 + (int(antal_i_lan ** 0.5) * 12000)
                 })
         map_df = pd.DataFrame(kart_rader)
         
