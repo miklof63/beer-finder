@@ -174,8 +174,8 @@ if not df.empty:
                     "latitude": koord["lat"],
                     "longitude": koord["lon"],
                     "antal": antal_i_lan,
-                    # Kvadratisk pixelradie (Ger perfekt storleksskillnad i mobilen)
-                    "radius": (antal_i_lan ** 0.5) * 4
+                    # Äkta meter på jorden. Startar på 10 km och växer med 4 km per öl!
+                    "radius": 10000 + (antal_i_lan * 4000)
                 })
         map_df = pd.DataFrame(kart_rader)
         
@@ -203,8 +203,6 @@ if not df.empty:
                         get_color='[255, 75, 75, 140]',
                         get_radius='radius',
                         radius_scale=1,       # Styr helt utifrån våra rena pixel-tal
-                        radius_min_pixels=3,  # Enstaka öl blir en fin liten prick
-                        radius_max_pixels=40, # Riktigt stora län stannar vid en snygg 40-pixels cirkel
                     ),
                 ],
             ))
