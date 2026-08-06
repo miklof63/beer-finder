@@ -189,7 +189,7 @@ if not df.empty:
             import pydeck as pdk
             
             st.pydeck_chart(pdk.Deck(
-                map_style='mapbox://styles/mapbox/light-v9',
+                map_style='road',
                 initial_view_state=pdk.ViewState(
                     latitude=62.0,
                     longitude=15.0,
