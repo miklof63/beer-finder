@@ -211,7 +211,8 @@ if not df.empty:
                             get_position='[longitude, latitude]',
                             get_color='[255, 75, 75, 140]', 
                             get_radius='radius',
-                            radius_scale=1,       
+                            radius_scale=1,
+                            pickable=True,
                         ),
                     ],
                 ))
