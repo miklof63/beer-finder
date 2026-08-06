@@ -170,10 +170,12 @@ if not df.empty:
             # Vi räknar nu i den färdigfiltrerade 'unika_ol'-tabellen!
             antal_i_lan = len(unika_ol[unika_ol['originLevel1'].astype(str) == lan_namn])
             if antal_i_lan > 0:
+                rent_lan_namn = lan_namn.replace("s län", "").replace(" län", "")
                 kart_rader.append({
                     "latitude": koord["lat"],
                     "longitude": koord["lon"],
                     "antal": antal_i_lan,
+                    "lan_visning": rent_lan_namn,
                     # Harmonisk dämpning med kvadratrot (Äkta meter)
                     # Ger ca 2.5 mil radie för 1 öl, och stannar runt 9 mil för 50 öl!
                     "radius": 15000 + (int(antal_i_lan ** 0.5) * 12000)
@@ -197,6 +199,11 @@ if not df.empty:
                         zoom=4,
                         pitch=0,
                     ),
+                    # Tooltip-aktivering för textruta vid tryck/hover
+                    tooltip={
+                        "html": "<b>{lan_visning}</b><br/>Antal öl: {antal}",
+                        "style": {"backgroundColor": "#007bff", "color": "white", "borderRadius": "5px", "padding": "8px"}
+                    },
                     layers=[
                         pdk.Layer(
                             'ScatterplotLayer',
