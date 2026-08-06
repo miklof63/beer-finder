@@ -202,7 +202,14 @@ if not df.empty:
                     # Tooltip-aktivering för textruta vid tryck/hover
                     tooltip={
                         "html": "<b>{lan_visning}</b><br/>Antal öl: {antal}",
-                        "style": {"backgroundColor": "#007bff", "color": "white", "borderRadius": "5px", "padding": "8px"}
+                        "style": {
+                            "backgroundColor": "#007bff", 
+                            "color": "white", 
+                            "borderRadius": "5px", 
+                            "padding": "8px",
+                            "transform": "translate(-50%, -130%)", # Tvingar rutan att ligga centrerat OVANFÖR pricken
+                            "text-align": "center"
+                        }
                     },
                     layers=[
                         pdk.Layer(
