@@ -173,9 +173,9 @@ if not df.empty:
                 kart_rader.append({
                     "latitude": koord["lat"],
                     "longitude": koord["lon"],
-                   "antal": antal_i_lan,
-                    # Ren pixel-storlek: 1 öl = 10 pixlar bred bubbla. 50 öl = 50 pixlar bred bubbla!
-                    "radius": antal_i_lan * 1.5
+                    "antal": antal_i_lan,
+                    # Kvadratisk pixelradie (Ger perfekt storleksskillnad i mobilen)
+                    "radius": (antal_i_lan ** 0.5) * 4
                 })
         map_df = pd.DataFrame(kart_rader)
         
@@ -200,11 +200,11 @@ if not df.empty:
                         'ScatterplotLayer',
                         data=map_df,
                         get_position='[longitude, latitude]',
-                        get_color='[255, 75, 75, 160]', # Snygg halvtransparent röd färg
+                        get_color='[255, 75, 75, 140]',
                         get_radius='radius',
-                        radius_scale=10000, # Denna skalar upp radien baserat på dina pixel-tal!
-                        radius_min_pixels=5,  # Minsta lilla prick ska synas (5 pixlar)
-                        radius_max_pixels=60, # Maximala bubblan får bli fet (60 pixlar)
+                        radius_scale=1,       # Styr helt utifrån våra rena pixel-tal
+                        radius_min_pixels=3,  # Enstaka öl blir en fin liten prick
+                        radius_max_pixels=40, # Riktigt stora län stannar vid en snygg 40-pixels cirkel
                     ),
                 ],
             ))
