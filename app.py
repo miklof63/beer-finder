@@ -170,7 +170,9 @@ if not df.empty:
             # Vi räknar nu i den färdigfiltrerade 'unika_ol'-tabellen!
             antal_i_lan = len(unika_ol[unika_ol['originLevel1'].astype(str) == lan_namn])
             if antal_i_lan > 0:
-                skalad_storlek = (antal_i_lan ** 2) * 5
+                # Metrisk skalning (10 000 meter = 1 mil i radie per öl)
+                # Detta gör att bubblorna blir massiva på en utzoomad Sverigekarta!
+                skalad_storlek = antal_i_lan * 10000
                 kart_rader.append({
                     "latitude": koord["lat"],
                     "longitude": koord["lon"],
