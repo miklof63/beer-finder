@@ -208,7 +208,9 @@ if not df.empty:
                             "borderRadius": "5px",
                             "padding": "6px 10px",
                             "textAlign": "center",
-                            "maxWidth": "150px" # Förhindrar att rutan sträcker ut sig åt höger och krockar med skärmkanten!
+                            "position": "absolute",
+                            "marginLeft": "-90px",  # Knuffar rutan 90 pixlar åt vänster så den slipper klippas vid ostkusten!
+                            "whiteSpace": "nowrap"  # Förhindrar fula radbrytningar i namnet
                         }
                     },
                     layers=[
