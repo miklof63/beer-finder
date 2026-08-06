@@ -170,10 +170,11 @@ if not df.empty:
             # Vi räknar nu i den färdigfiltrerade 'unika_ol'-tabellen!
             antal_i_lan = len(unika_ol[unika_ol['originLevel1'].astype(str) == lan_namn])
             if antal_i_lan > 0:
+                skalad_storlek = (antal_i_lan ** 2) * 5
                 kart_rader.append({
                     "latitude": koord["lat"],
                     "longitude": koord["lon"],
-                    "Antal öl": antal_i_lan * 15  # Multipliceras lite så bubblorna syns bra i mobilen
+                    "Antal öl": skalad_storlek
                 })
         map_df = pd.DataFrame(kart_rader)
         
