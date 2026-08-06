@@ -203,12 +203,12 @@ if not df.empty:
                     tooltip={
                         "html": "<b>{lan_visning}</b><br/>Antal öl: {antal}",
                         "style": {
-                            "backgroundColor": "#007bff", 
-                            "color": "white", 
-                            "borderRadius": "5px", 
-                            "padding": "8px",
-                            "transform": "translate(-50%, -130%)", # Tvingar rutan att ligga centrerat OVANFÖR pricken
-                            "text-align": "center"
+                            "backgroundColor": "#007bff",
+                            "color": "white",
+                            "borderRadius": "5px",
+                            "padding": "6px 10px",
+                            "textAlign": "center",
+                            "maxWidth": "150px" # Förhindrar att rutan sträcker ut sig åt höger och krockar med skärmkanten!
                         }
                     },
                     layers=[
